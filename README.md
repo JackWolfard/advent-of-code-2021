@@ -5,9 +5,9 @@ My solutions to the [Advent of Code 2021][advent-of-code].
 ## Solutions
 
 - [x] Day 1: Sonar Sweep
-- [ ] Day 2:
-- [ ] Day 3:
-- [ ] Day 4:
+- [ ] Day 2: Dive!
+- [ ] Day 3: Binary Diagnostic
+- [ ] Day 4: Giant Squid
 - [ ] Day 5:
 - [ ] Day 6:
 - [ ] Day 7:
