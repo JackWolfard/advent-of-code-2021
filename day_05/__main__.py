@@ -1,7 +1,6 @@
 from __future__ import annotations
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
-from enum import Enum
+from typing import Dict, List, Tuple
 
 class Point:
     _x: int
@@ -45,16 +44,11 @@ class Point:
     def y(self) -> int:
         return self._y
 
-class LineAttribute(Enum):
-    VERTICAL="Vertical"
-    HORIZONTAL="Horizontal"
-    MAJOR_DIAGONAL="Major Diagonal"
-    MINOR_DIAGONAL="Minor Diagonal"
-
 class Line:
     _start: Point
     _stop: Point
-    _type: Optional[LineAttribute] = None
+    _dx: int
+    _dy: int
 
     def __init__(self, a: Point, b: Point):
         if a <= b:
@@ -63,14 +57,13 @@ class Line:
         else:
             self._start = b
             self._stop = a
-        if self._start.x == self._stop.x:
-            self._type = LineAttribute.VERTICAL
-        elif self._start.y == self._stop.y:
-            self._type = LineAttribute.HORIZONTAL
-        elif self._start.y < self._stop.y:
-            self._type = LineAttribute.MINOR_DIAGONAL
-        else:
-            self._type = LineAttribute.MAJOR_DIAGONAL
+        self._dx = self._stop.x - self._start.x
+        self._dy = self._stop.y - self._start.y
+        # normalize
+        if self._dx != 0:
+            self._dx //= abs(self._dx)
+        if self._dy != 0:
+            self._dy //= abs(self._dy)
     
     @classmethod
     def from_str(self, line: str) -> Line:
@@ -78,7 +71,7 @@ class Line:
         return Line(Point.from_str(a), Point.from_str(b))
     
     def __str__(self) -> str:
-        return f'Line({self._start}, {self._stop}, {self._type})'
+        return f'Line({self._start}, {self._stop}, dx={self._dx}, dy={self._dy})'
         
     @property
     def start(self) -> Point:
@@ -89,20 +82,11 @@ class Line:
         return self._stop
         
     def points(self) -> List[Point]:
-        points = []
-        if self._type == LineAttribute.VERTICAL:
-            for i in range(self._stop.y - self._start.y + 1):
-                points.append(Point(self._start.x, self._start.y + i))
-        elif self._type == LineAttribute.HORIZONTAL:
-            for i in range(self._stop.x - self._start.x + 1):
-                points.append(Point(self._start.x + i, self._start.y))
-        elif self._type == LineAttribute.MAJOR_DIAGONAL:
-            for i in range(self._stop.x - self._start.x + 1):
-                points.append(Point(self._start.x + i, self._start.y - i))
-        elif self._type == LineAttribute.MINOR_DIAGONAL:
-            for i in range(self._stop.x - self._start.x + 1):
-                points.append(Point(self._start.x + i, self._start.y + i))
-        return points
+        return [
+            Point(self._start.x + i * self._dx, self._start.y + i * self._dy)
+            for i in range(max(self._stop.x - self._start.x,
+                               self._stop.y - self._start.y) + 1)
+        ]
 
 def get_data(input_path: Path) -> List[Line]:
     lines = []
