@@ -8,7 +8,7 @@ My solutions to the [Advent of Code 2021][advent-of-code].
 - [x] Day 2: Dive!
 - [x] Day 3: Binary Diagnostic
 - [x] Day 4: Giant Squid
-- [ ] Day 5:
+- [x] Day 5: Hydrothermal Venture
 - [ ] Day 6:
 - [ ] Day 7:
 - [ ] Day 8:
